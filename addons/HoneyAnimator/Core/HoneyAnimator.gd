@@ -3,7 +3,7 @@ extends Node
 const Constants := preload("res://addons/HoneyAnimator/Core/HoneyConstants.gd")
 const _EasingData := Constants.EasingData
 
-const LoopType := {"Restart":"Restart","Yoyo":"Yoyo"}
+const LoopType := {"None":"None","Restart":"Restart","Yoyo":"Yoyo"}
 const TimeDirection := {"Left":-1.0,"Right":1.0}
 const Ease := Constants.EasingsData.EasingNames
 
@@ -42,9 +42,15 @@ class HoneyAnimatorSystem:
 		_get_tree().connect("idle_frame", self, "_update")
 	
 
-	func anima_node(node: Node) -> HoneyMethodsPropertys:
+	func target_node(node: Node) -> HoneyMethodsPropertys:
 		var animation_methods := HoneyMethodsPropertys.new(self, node)
 		return animation_methods
+	
+	
+	func anima_method(method: FuncRef, from, to_value,duration: float) -> HoneyMethod:
+		var animation_method := HoneyMethod.new(_node)
+		get_animations().append(animation_method)
+		return animation_method.anima_method(method, from, to_value, duration)
 
 	
 	func create_sequence() -> HoneySequence:
@@ -278,7 +284,7 @@ class HoneyMethodsPropertys:
 	func _init(honey_animator: Object,node: Node) -> void:
 		_honey_animator = honey_animator
 		_node = node
-	
+		
 	
 	func squash_to_2d(squash_amount: float,scale_base,duration: float) -> HoneyProperty:
 		return scale_to(scale_base, duration).from(Vector2(1+ squash_amount,1- squash_amount))
@@ -378,7 +384,13 @@ class HoneyMethodsPropertys:
 		var animation_property := HoneyProperty.new(_node)
 		_honey_animator.get_animations().append(animation_property)
 		return animation_property.anima_property(property, to_value, duration)
-
+	
+	
+	func _anima_method(method: FuncRef, from, to_value,duration: float) -> HoneyMethod:
+		var animation_method := HoneyMethod.new(_node)
+		_honey_animator.get_animations().append(animation_method)
+		return animation_method.anima_method(method, from, to_value, duration)
+	
 
 class HoneyParameter:
 	signal animation_started()
@@ -436,15 +448,11 @@ class HoneyParameter:
 
 	func set_delay(value: float):
 		_set_delay(value)
-		return self
-
-
-	func set_initial_delay(value: float):
 		_set_initial_delay(value)
 		return self
 	
 	
-	func set_loops(value: int,loop_type: String = LoopType.Restart):
+	func set_loops(value: int,loop_type: String = LoopType.None):
 		_set_loop_count(value)
 		_set_loop_type(loop_type)
 		return self
@@ -475,6 +483,7 @@ class HoneyParameter:
 		_set_paused(false)
 		_set_elapsed_time(EmptyTime)
 		_handle_loop_type()
+		_set_delay(_get_initial_delay())
 		return self
 	
 	
@@ -602,7 +611,7 @@ class HoneyParameter:
 	
 	
 	func _handle_loops() -> void:
-		if _get_loop_count() != 0:
+		if _get_loop_count() > 0:
 			_set_loop_count(_get_loop_count() - 1)
 			reset()
 			if _get_on_loop_finished() != null:
@@ -613,9 +622,14 @@ class HoneyParameter:
 			if _get_on_infinity_loop_finished() != null:
 				_get_on_infinity_loop_finished().call_funcv([_get_loop_count()])
 			emit_signal("animation_infinity_loop_finished", _get_loop_count())
+		_check_loop_type()
 	
 	
 	func _handle_loop_type() -> void:
+		pass
+	
+	
+	func _check_loop_type() -> void:
 		pass
 	
 	
@@ -623,7 +637,8 @@ class HoneyParameter:
 		if _is_animation_finished() == true:
 			_set_finished(true)
 			_set_playing(false)
-			_handle_loops()
+			if _get_loop_count() != 0:
+				_handle_loops()
 			if _get_on_finished() != null:
 				_get_on_finished().call_func()
 			emit_signal("animation_finished")
@@ -907,7 +922,7 @@ class HoneyAnimation extends HoneyParameter:
 	
 	func _check_ease(time_normalized: float) -> float:
 		if _get_ease() == null:
-			_set_ease(HoneyAnimator.Ease.EaseLinearInOut)
+			_set_ease(Ease.EaseLinearInOut)
 		
 		elif _get_ease() is Curve:
 			time_normalized = _get_ease().interpolate(_get_time_normalized())
@@ -1011,6 +1026,7 @@ class HoneyProperty extends HoneyAnimation:
 
 	func set_delay(value: float) -> HoneyProperty:
 		_set_delay(value)
+		_set_initial_delay(value)
 		return self
 
 
@@ -1019,7 +1035,7 @@ class HoneyProperty extends HoneyAnimation:
 		return self
 	
 	
-	func set_loops(value: int,loop_type: String = LoopType.Restart) -> HoneyProperty:
+	func set_loops(value: int,loop_type: String = LoopType.None) -> HoneyProperty:
 		_set_loop_count(value)
 		_set_loop_type(loop_type)
 		return self
@@ -1088,6 +1104,7 @@ class HoneyProperty extends HoneyAnimation:
 		_set_paused(false)
 		_set_elapsed_time(EmptyTime)
 		_handle_loop_type()
+		_set_delay(_get_initial_delay())
 		return self
 	
 	
@@ -1138,27 +1155,20 @@ class HoneyProperty extends HoneyAnimation:
 
 class HoneyMethod extends HoneyAnimation:
 	
-	var _property := NodePath() setget _set_property,_get_property
+	var _method : FuncRef = null setget _set_method,_get_method
 	var _from setget _set_from,_get_from
 	var _to setget _set_to,_get_to
 	var _is_from := true setget _set_is_from,_get_is_from
 	var _as_relative := false setget _set_to,_get_to
 	
 	
-	func _init(node: Node) -> void:
-		_set_target(node)
-		_set_from(_get_target().get_indexed(_get_property()))
+	func _init(from) -> void:
+		_set_from(from)
 	
 	
-	func anima_property(property: NodePath,to_value,duration: float) -> HoneyMethod:
-		_set_property(property)
-		
-		if _get_is_from() == true:
-			_set_from(_get_target().get_indexed(_get_property()))
-		
-		
-		if _get_as_relative() == true:
-			_set_from(_get_from() + _get_to())
+	func anima_method(method: FuncRef,from,to_value,duration: float) -> HoneyMethod:
+		_set_method(method)
+		_set_from(from)
 		_set_to(to_value)
 		_set_duration(duration)
 		return self
@@ -1169,23 +1179,19 @@ class HoneyMethod extends HoneyAnimation:
 		var animation_value = _get_from() + (_get_to() - _get_from()) * time_normalized * _get_time_direction()
 		if _get_on_step() != null:
 			_get_on_step().call_funcv([animation_value])
-		_set_target_property(_get_property(), animation_value)
+		_get_method().call_func(animation_value)
 		emit_signal("animation_step", animation_value)
 
 
 	func _check_loop_type() -> void:
 		if _get_loop_type() == LoopType.Restart:
-			_set_target_property(_get_property(), _get_from())
+			_get_method().call_func(_get_from())
 		elif _get_loop_type() == LoopType.Yoyo:
 			var old_from = _get_from()
 			var old_to = _get_to()
 			_set_to(old_from)
 			_set_from(old_to)
-			_set_target_property(_get_property(), _get_from())
-	
-	
-	func _set_target_property(property: String,value) -> void:
-		_get_target().set(property, value)
+			_get_method().call_func(_get_from())
 	
 	
 	func on_started(func_ref: FuncRef) -> HoneyMethod:
@@ -1233,20 +1239,7 @@ class HoneyMethod extends HoneyAnimation:
 		return self
 	
 	
-	func from(value) -> HoneyMethod:
-		_set_from(value)
-		_set_is_from(false)
-		return self
-	
-	
-	func from_current() -> HoneyMethod:
-		_set_from(_get_target().get_indexed(_get_property()))
-		_set_is_from(false)
-		return self
-	
-	
 	func update_from() -> HoneyMethod:
-		_set_from(_get_target().get_indexed(_get_property()))
 		return self
 	
 	
@@ -1262,15 +1255,11 @@ class HoneyMethod extends HoneyAnimation:
 
 	func set_delay(value: float) -> HoneyMethod:
 		_set_delay(value)
-		return self
-
-
-	func set_initial_delay(value: float) -> HoneyMethod:
 		_set_initial_delay(value)
 		return self
 	
 	
-	func set_loops(value: int,loop_type: String = LoopType.Restart) -> HoneyMethod:
+	func set_loops(value: int,loop_type: String = LoopType.None) -> HoneyMethod:
 		_set_loop_count(value)
 		_set_loop_type(loop_type)
 		return self
@@ -1294,6 +1283,7 @@ class HoneyMethod extends HoneyAnimation:
 		_set_paused(false)
 		_set_elapsed_time(EmptyTime)
 		_handle_loop_type()
+		_set_delay(_get_initial_delay())
 		return self
 	
 	
@@ -1302,12 +1292,12 @@ class HoneyMethod extends HoneyAnimation:
 		return self
 	
 	
-	func _set_property(value: NodePath) -> void:
-		_property = value
+	func _set_method(value: FuncRef) -> void:
+		_method = value
 	
 	
-	func _get_property() -> NodePath:
-		return _property
+	func _get_method() -> FuncRef:
+		return _method
 	
 	
 	func _set_from(value) -> void:

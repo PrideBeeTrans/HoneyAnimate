@@ -5,6 +5,20 @@ const EasingNames := EasingsData.EasingNames
 const EasingData := EasingsData.EasingData
 
 
+static func get_size_property(target: Object, axis: String = "") -> String:
+	if target is Node2D or target is Spatial:
+		if axis != "":
+			return "size:" + axis
+		else:
+			return "size"
+	elif target is Control:
+		if axis != "":
+			return "rect_size:" + axis
+		else:
+			return "rect_size"
+	return ""
+
+
 static func get_local_position_property(target: Object, axis: String = "") -> String:
 	if target is Node2D or target is Spatial:
 		if axis != "":
