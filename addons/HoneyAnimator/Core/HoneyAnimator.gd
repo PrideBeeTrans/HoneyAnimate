@@ -3,7 +3,7 @@ extends Node
 const Constants := preload("res://addons/HoneyAnimator/Core/HoneyConstants.gd")
 const _EasingData := Constants.EasingData
 
-const LoopType := {"None":"None","Restart":"Restart","Yoyo":"Yoyo"}
+const LoopType := {"Restart":"Restart","Yoyo":"Yoyo"}
 const TimeDirection := {"Left":-1.0,"Right":1.0}
 const Ease := Constants.EasingsData.EasingNames
 
@@ -13,6 +13,10 @@ const SpeedScaleDefault := 1.0
 
 func create_honey_animator() -> HoneyAnimatorSystem:
 	return HoneyAnimatorSystem.new(self)
+
+
+func create_sequence() -> HoneySequence:
+	return HoneySequence.new(self)
 
 
 func create_parameters() -> HoneyParameter:
@@ -26,15 +30,13 @@ class HoneyAnimatorSystem:
 	var _tree := Engine.get_main_loop() as SceneTree setget _set_tree,_get_tree
 	
 	var _animations := [] setget _set_animations,_get_animations
-	var _sequences := []
 	
-	var _started := false setget _set_started,_get_started
 	var _running := false
 	var _paused := false setget _set_paused,_get_paused
 	var _auto_start := true setget _set_auto_start,_get_auto_start
 	
 	
-	func _init(node) -> void:
+	func _init(node: Node) -> void:
 		if not _get_tree().has_meta(HONEY_ANIMATOR_NAME):
 			_get_tree().set_meta(HONEY_ANIMATOR_NAME, [])
 		_set_node(node)
@@ -47,29 +49,12 @@ class HoneyAnimatorSystem:
 		return animation_methods
 	
 	
-	func anima_method(method: FuncRef, from, to_value,duration: float) -> HoneyMethod:
-		var animation_method := HoneyMethod.new(_node)
-		get_animations().append(animation_method)
-		return animation_method.anima_method(method, from, to_value, duration)
-
-	
-	func create_sequence() -> HoneySequence:
-		var sequence := HoneySequence.new()
-		_sequences.append(sequence)
-		return sequence
-	
-	
 	func _update() -> void:
 		var delta := _node.get_process_delta_time()
-		if is_started() == true or is_auto_start() == true:
-			if _get_animations().empty() == true:
-				push_error("HoneyAnimator started, but has no animations.")
-				_get_tree().disconnect("idle_frame", self, "_update")
-				return
+		if is_auto_start() == true:
 			if _running == false:
 				_running = true
 			_process_animations(delta)
-			_process_sequence(delta)
 	
 	
 	func _process_animations(delta: float) -> void:
@@ -77,12 +62,6 @@ class HoneyAnimatorSystem:
 			animation.play()
 			if animation.is_playing() == true:
 				animation.process_animation(delta)
-	
-	
-	func _process_sequence(delta: float) -> void:
-		for sequence in _sequences:
-			if sequence.is_playing() == true:
-				sequence.process_sequence(delta)
 
 
 	func _set_node(value: Node) -> void:
@@ -107,14 +86,6 @@ class HoneyAnimatorSystem:
 	
 	func _get_animations() -> Array:
 		return _animations
-	
-	
-	func _set_started(value: bool) -> void:
-		_started = value
-	
-	
-	func _get_started() -> bool:
-		return _started
 
 
 	func _set_paused(value: bool) -> void:
@@ -212,15 +183,11 @@ class HoneyAnimatorSystem:
 	
 	
 	func kill() -> void:
-		free()
-	
+		restart_all(false)
+		
 	
 	func set_auto_start(value: bool) -> void:
 		_set_auto_start(value)
-	
-	
-	func is_started() -> bool:
-		return _get_started()
 	
 	
 	func is_paused() -> bool:
@@ -284,14 +251,20 @@ class HoneyMethodsPropertys:
 	func _init(honey_animator: Object,node: Node) -> void:
 		_honey_animator = honey_animator
 		_node = node
-		
+	
 	
 	func squash_to_2d(squash_amount: float,scale_base,duration: float) -> HoneyProperty:
-		return scale_to(scale_base, duration).from(Vector2(1+ squash_amount,1- squash_amount))
+		if _node is Node2D or Control:
+			return scale_to(scale_base, duration).from(Vector2(1+ squash_amount,1- squash_amount))
+		else:
+			return scale_to(scale_base, duration).from(Vector3(1+ squash_amount,1- squash_amount,1- squash_amount))
 	
 	
 	func stretch_to_2d(stretch_amount: float,scale_base,duration: float) -> HoneyProperty:
-		return scale_to(scale_base, duration).from(Vector2(1- stretch_amount,1+ stretch_amount))
+		if _node is Node2D or Control:
+			return scale_to(scale_base, duration).from(Vector2(1- stretch_amount,1+ stretch_amount))
+		else:
+			return scale_to(scale_base, duration).from(Vector3(1- stretch_amount,1+ stretch_amount,1- stretch_amount))
 	
 	
 	func fade_in(duration: float) -> HoneyProperty:
@@ -328,8 +301,8 @@ class HoneyMethodsPropertys:
 	func move_x_to(to_value,duration: float) -> HoneyProperty:
 		var property_position := Constants.get_position_property(_node, "x")
 		return anima_property(property_position, to_value, duration)
-		
-		
+	
+	
 	func move_y_to(to_value,duration: float) -> HoneyProperty:
 		var property_position := Constants.get_position_property(_node, "y")
 		return anima_property(property_position, to_value, duration)
@@ -337,26 +310,6 @@ class HoneyMethodsPropertys:
 	
 	func move_z_to(to_value,duration: float) -> HoneyProperty:
 		var property_position := Constants.get_position_property(_node, "z")
-		return anima_property(property_position, to_value, duration)
-	
-	
-	func local_move_to(to_value,duration: float) -> HoneyProperty:
-		var property_position := Constants.get_local_position_property(_node)
-		return anima_property(property_position, to_value, duration)
-	
-	
-	func local_move_x_to(to_value,duration: float) -> HoneyProperty:
-		var property_position := Constants.get_local_position_property(_node, "x")
-		return anima_property(property_position, to_value, duration)
-	
-	
-	func local_move_y_to(to_value,duration: float) -> HoneyProperty:
-		var property_position := Constants.get_local_position_property(_node, "y")
-		return anima_property(property_position, to_value, duration)
-	
-	
-	func local_move_z_to(to_value,duration: float) -> HoneyProperty:
-		var property_position := Constants.get_local_position_property(_node, "z")
 		return anima_property(property_position, to_value, duration)
 	
 	
@@ -380,17 +333,64 @@ class HoneyMethodsPropertys:
 		return anima_property(property_scale, to_value, duration)
 	
 	
+	func size_to(to_value,duration: float) -> HoneyProperty:
+		var property_scale := Constants.get_size_property(_node)
+		return anima_property(property_scale, to_value, duration)
+	
+	
+	func size_x_to(to_value,duration: float) -> HoneyProperty:
+		var property_scale := Constants.get_size_property(_node, "x")
+		return anima_property(property_scale, to_value, duration)
+	
+	
+	func size_y_to(to_value,duration: float) -> HoneyProperty:
+		var property_scale := Constants.get_size_property(_node, "y")
+		return anima_property(property_scale, to_value, duration)
+	
+	
+	func size_z_to(to_value,duration: float) -> HoneyProperty:
+		var property_scale := Constants.get_size_property(_node, "z")
+		return anima_property(property_scale, to_value, duration)
+	
+	
+	func local_move_to(to_value,duration: float) -> HoneyProperty:
+		var property_position := Constants.get_local_position_property(_node)
+		return anima_property(property_position, to_value, duration)
+	
+	
+	func local_move_to_x(to_value,duration: float) -> HoneyProperty:
+		var property_position := Constants.get_local_position_property(_node, "x")
+		return anima_property(property_position, to_value, duration)
+	
+	
+	func local_move_to_y(to_value,duration: float) -> HoneyProperty:
+		var property_position := Constants.get_local_position_property(_node, "y")
+		return anima_property(property_position, to_value, duration)
+	
+	
+	func local_move_to_z(to_value,duration: float) -> HoneyProperty:
+		var property_position := Constants.get_local_position_property(_node, "z")
+		return anima_property(property_position, to_value, duration)
+	
+	
+	func rect_to(to_value: Rect2,duration: float) -> HoneyProperty:
+		return anima_property("region_rect", to_value, duration)
+	
+	
 	func anima_property(property: NodePath,to_value,duration: float) -> HoneyProperty:
+		if _node.get_indexed(property) == null:
+			push_error("Node %s dont has this property %s" % [_node,property])
+			return null
 		var animation_property := HoneyProperty.new(_node)
 		_honey_animator.get_animations().append(animation_property)
 		return animation_property.anima_property(property, to_value, duration)
 	
 	
-	func _anima_method(method: FuncRef, from, to_value,duration: float) -> HoneyMethod:
+	func anima_method(method: FuncRef, from, to_value,duration: float) -> HoneyMethod:
 		var animation_method := HoneyMethod.new(_node)
 		_honey_animator.get_animations().append(animation_method)
 		return animation_method.anima_method(method, from, to_value, duration)
-	
+
 
 class HoneyParameter:
 	signal animation_started()
@@ -427,6 +427,7 @@ class HoneyParameter:
 	
 	var _on_started : FuncRef setget _set_on_started,_get_on_started
 	var _on_step : FuncRef setget _set_on_step,_get_on_step
+	var _on_running : FuncRef setget _set_on_running,_get_on_running
 	var _on_finished : FuncRef setget _set_on_finished,_get_on_finished
 	var _on_loop_finished : FuncRef setget _set_on_loop_finished,_get_on_loop_finished
 	var _on_infinity_loop_finished : FuncRef setget _set_on_infinity_loop_finished,_get_on_infinity_loop_finished
@@ -535,6 +536,10 @@ class HoneyParameter:
 		return _get_playing() and not _is_finished() == true
 	
 	
+	func is_finished() -> bool:
+		return _is_finished()
+	
+	
 	func is_paused() -> bool:
 		return _get_paused()
 
@@ -599,6 +604,11 @@ class HoneyParameter:
 		_set_on_flip(func_ref)
 		return self
 	
+	
+	func on_running(func_ref: FuncRef):
+		_set_on_running(func_ref)
+		return self
+	
 
 	func _handle_started() -> void:
 		if not  _is_started() == true:
@@ -617,6 +627,7 @@ class HoneyParameter:
 			if _get_on_loop_finished() != null:
 				_get_on_loop_finished().call_funcv([_get_loop_count()])
 			emit_signal("animation_loop_finished", _get_loop_count())
+		
 		elif _get_loop_count() == -1.0:
 			reset()
 			if _get_on_infinity_loop_finished() != null:
@@ -639,8 +650,10 @@ class HoneyParameter:
 			_set_playing(false)
 			if _get_loop_count() != 0:
 				_handle_loops()
-			if _get_on_finished() != null:
+			if _get_on_finished() != null and _get_on_finished().is_valid() == true:
 				_get_on_finished().call_func()
+			if _get_on_finished() != null and _get_on_finished().is_valid() == false and _get_on_finished().has_method(_get_on_finished().get_function()) == false:
+				push_error("Is invalid funcref %s" % _get_on_finished())
 			emit_signal("animation_finished")
 	
 	
@@ -652,8 +665,9 @@ class HoneyParameter:
 		return _get_elapsed_time() == _get_duration()
 	
 
-	func _set_target(value: Object) -> void:
+	func _set_target(value: Object):
 		_target = value
+		return self
 		
 
 	func _get_target() -> Object:
@@ -826,6 +840,14 @@ class HoneyParameter:
 		return _on_step
 	
 	
+	func _set_on_running(value: FuncRef) -> void:
+		_on_running = value
+	
+	
+	func _get_on_running() -> FuncRef:
+		return _on_running
+	
+	
 	func _set_on_finished(value: FuncRef) -> void:
 		_on_finished = value
 	
@@ -994,7 +1016,7 @@ class HoneyProperty extends HoneyAnimation:
 	
 	
 	func _set_target_property(property: String,value) -> void:
-		_get_target().set(property, value)
+		_get_target().set_indexed(property, value)
 	
 	
 	func from(value) -> HoneyProperty:
@@ -1035,7 +1057,7 @@ class HoneyProperty extends HoneyAnimation:
 		return self
 	
 	
-	func set_loops(value: int,loop_type: String = LoopType.None) -> HoneyProperty:
+	func set_loops(value: int,loop_type: String = LoopType.Restart) -> HoneyProperty:
 		_set_loop_count(value)
 		_set_loop_type(loop_type)
 		return self
@@ -1059,6 +1081,11 @@ class HoneyProperty extends HoneyAnimation:
 	
 	func on_step(func_ref: FuncRef) -> HoneyProperty:
 		_set_on_step(func_ref)
+		return self
+	
+	
+	func on_running(func_ref: FuncRef) -> HoneyProperty:
+		_set_on_running(func_ref)
 		return self
 	
 	
@@ -1164,6 +1191,7 @@ class HoneyMethod extends HoneyAnimation:
 	
 	func _init(from) -> void:
 		_set_from(from)
+		connect("animation_finished", self, "_on_finished")
 	
 	
 	func anima_method(method: FuncRef,from,to_value,duration: float) -> HoneyMethod:
@@ -1179,7 +1207,10 @@ class HoneyMethod extends HoneyAnimation:
 		var animation_value = _get_from() + (_get_to() - _get_from()) * time_normalized * _get_time_direction()
 		if _get_on_step() != null:
 			_get_on_step().call_funcv([animation_value])
-		_get_method().call_func(animation_value)
+		if _get_method().is_valid() == true:
+			_get_method().call_func(animation_value)
+		else:
+			_get_target().call(_get_method().function, animation_value)
 		emit_signal("animation_step", animation_value)
 
 
@@ -1201,6 +1232,11 @@ class HoneyMethod extends HoneyAnimation:
 	
 	func on_step(func_ref: FuncRef) -> HoneyMethod:
 		_set_on_step(func_ref)
+		return self
+	
+	
+	func on_running(func_ref: FuncRef) -> HoneyMethod:
+		_set_on_running(func_ref)
 		return self
 	
 	
@@ -1259,7 +1295,7 @@ class HoneyMethod extends HoneyAnimation:
 		return self
 	
 	
-	func set_loops(value: int,loop_type: String = LoopType.None) -> HoneyMethod:
+	func set_loops(value: int,loop_type: String = LoopType.Restart) -> HoneyMethod:
 		_set_loop_count(value)
 		_set_loop_type(loop_type)
 		return self
@@ -1291,6 +1327,11 @@ class HoneyMethod extends HoneyAnimation:
 		_set_ease(value)
 		return self
 	
+	
+	func _set_target(value: Object) -> HoneyMethod:
+		_target = value
+		return self
+		
 	
 	func _set_method(value: FuncRef) -> void:
 		_method = value
@@ -1378,16 +1419,45 @@ class HoneyFuncRefAnimation extends HoneyAnimation:
 
 
 class HoneySequence:
-	signal animation_step_finished(idx)
-	signal animation_all_finished()
+	signal sequence_started()
+	signal sequence_step_finished(idx)
+	signal sequence_all_finished()
 	
-	var _current_index := 0
+	const HONEY_ANIMATOR_NAME := "HoneyAnimator"
+	
+	var _node : Node = null setget _set_node,_get_node
+	var _tree := Engine.get_main_loop() as SceneTree setget _set_tree,_get_tree
+	var _current_index := 0 setget _set_current_index,_get_current_index
 	var _animations := [] setget _set_animations,_get_animations
-	var _completed := false
-	var _speed_scale := 1.0
+	var _all_completed := false setget _set_all_completed,_get_all_completed
+	var _speed_scale := 1.0 setget _set_speed_scale,_get_speed_scale
+	
+	var _started := false setget _set_started,_get_started
+	var _paused := false setget _set_paused,_get_paused
+	var _auto_start := true setget _set_auto_start,_get_auto_start
+	var _running := false setget _set_running,_get_running
 	
 	var _on_step_finished : FuncRef = null setget _set_on_step_finished,_get_on_step_finished
 	var _on_all_finished : FuncRef = null setget _set_on_all_finished,_get_on_all_finished
+	
+	
+	func _init(node: Node) -> void:
+		if not _get_tree().has_meta(HONEY_ANIMATOR_NAME):
+			_get_tree().set_meta(HONEY_ANIMATOR_NAME, [])
+		_set_node(node)
+		_get_tree().get_meta(HONEY_ANIMATOR_NAME).append(self)
+		_get_tree().connect("idle_frame", self, "_update")
+	
+	
+	func _update() -> void:
+		var delta := _node.get_process_delta_time()
+		if is_auto_start() == true:
+			if _get_started() == false:
+				_set_started(true)
+				emit_signal("sequence_started")
+			if _running == false:
+				_set_running(true)
+			_process_sequence(delta)
 	
 	
 	func on_step_finished(value: FuncRef) -> void:
@@ -1421,11 +1491,12 @@ class HoneySequence:
 	
 	
 	func _prepare_next() -> void:
-			emit_signal("animation_step_finished", _current_index)
+			emit_signal("sequence_step_finished", _current_index)
+		
 			if _get_on_step_finished() != null:
 				_get_on_step_finished().call_funcv([_current_index])
 			
-			if _animations[_current_index].has_loops() == true or _animations[_current_index].is_infinity_loop() == true:
+			if _has_loops() == true:
 				return
 			if _current_index < _animations.size() -1:
 				_current_index += 1
@@ -1433,15 +1504,33 @@ class HoneySequence:
 				_animations[_current_index].update_from()
 	
 	
-	func process_sequence(delta: float) -> void:
+	func _process_sequence(delta: float) -> void:
 		if _current_index < _animations.size():
-			_animations[_current_index].play()
-			_animations[_current_index].process_animation(delta, true)
-		if _current_index == _animations.size() and not _completed == true:
-			_completed = true
-			emit_signal("animation_all_finished")
+			if _get_animation().is_finished() == false:
+				_get_animation().play()
+				_get_animation().process_animation(delta * _get_speed_scale(), true)
+		
+		if _is_all_completed() == true:
+			_set_all_completed(true)
+			emit_signal("sequence_all_finished")
 			if _get_on_all_finished() != null:
 				_get_on_all_finished().call_func()
+	
+	
+	func _has_loops() -> bool:
+		return _get_animation().has_loops() == true or _get_animation().is_infinity_loop() == true
+	
+	
+	func _is_all_completed() -> bool:
+		return _current_index == _animations.size() and not _get_all_completed() == true
+	
+	
+	func _get_animation() -> Object:
+		return _get_animations()[_current_index]
+	
+	
+	func is_auto_start() -> bool:
+		return _get_auto_start()
 	
 	
 	func is_playing() -> bool:
@@ -1449,15 +1538,153 @@ class HoneySequence:
 	
 	
 	func is_completed() -> bool:
-		return _completed
-		
-		
+		return _all_completed == true
+	
+	
+	func flip_all() -> void:
+		for animation in _animations:
+			animation.flip()
+
+
+	func flip(id) -> void:
+		for animation in _animations:
+			if animation.get_id() == id:
+				animation.flip()
+
+
+	func play_all() -> void:
+		for animation in _animations:
+			animation.play()
+
+
+	func play(id) -> void:
+		for animation in _animations:
+			if animation.get_id() == id:
+				animation.play()
+
+
+	func play_backwards_all() -> void:
+		for animation in _animations:
+			animation.play_backwards()
+
+
+	func play_backwards(id) -> void:
+		for animation in _animations:
+			if animation.get_id() == id:
+				animation.play_backwards()
+
+
+	func play_forward_all() -> void:
+		for animation in _animations:
+			animation.play_forward()
+
+
+	func play_forward(id: int) -> void:
+		for animation in _animations:
+			if animation.get_id() == id:
+				animation.play_forward()
+
+
+	func restart_all(include_delay: bool = true, change_delay_to: float = -1.0) -> void:
+		for animation in _animations:
+			animation.restart(include_delay, change_delay_to)
+
+
+	func restart(id: int, include_delay: bool = true, change_delay_to: float = -1.0) -> void:
+		for animation in _animations:
+			if animation.get_id() == id:
+				animation.restart(include_delay, change_delay_to)
+
+
+	func rewind_all(include_delay: bool = true) -> void:
+		for animation in _animations:
+			animation.rewind(include_delay)
+
+
+	func rewind(id: int, include_delay: bool = true) -> void:
+		for animation in _animations:
+			if animation.get_id() == id:
+				animation.rewind(include_delay)
+	
+	
+	func kill() -> void:
+		restart_all(false)
+	
+	
 	func set_speed_scale(value: float) -> void:
-		_speed_scale = value
+		_set_speed_scale(value)
 		
 		
 	func get_speed_scale() -> float:
+		return _get_speed_scale()
+	
+	
+	func _set_speed_scale(value: float) -> void:
+		_speed_scale = value
+		
+		
+	func _get_speed_scale() -> float:
 		return _speed_scale
+	
+	
+	func _set_current_index(value: int) -> void:
+		_current_index = value
+	
+	
+	func _get_current_index() -> int:
+		return _current_index
+	
+	
+	func _set_all_completed(value: bool) -> void:
+		_all_completed = value
+	
+	
+	func _get_all_completed() -> bool:
+		return _all_completed
+	
+	
+	func _set_node(value: Node) -> void:
+		_node = value
+	
+	
+	func _get_node() -> Node:
+		return _node
+
+
+	func _set_tree(value: SceneTree) -> void:
+		_tree = value
+	
+	
+	func _get_tree() -> SceneTree:
+		return _tree
+
+
+	func _set_paused(value: bool) -> void:
+		_paused = value
+	
+	
+	func _get_paused() -> bool:
+		return _paused
+		
+	
+	func _set_auto_start(value: bool) -> void:
+		_auto_start = value
+	
+	
+	func _get_auto_start() -> bool:
+		return _auto_start
+	
+	
+	func _set_running(value: bool) -> void:
+		_running = value
+	
+	
+	func _get_running() -> bool:
+		return _running
+	
+	
+	func is_running() -> bool:
+		return _get_running()
 
 
 	func _set_animations(value: Array) -> void:
@@ -1482,3 +1709,15 @@ class HoneySequence:
 	
 	func _get_on_all_finished() -> FuncRef:
 		return _on_all_finished
+	
+	
+	func _set_started(value: bool) -> void:
+		_started = value
+		
+
+	func _get_started() -> bool:
+		return _started
+	
+	
+	func _is_started() -> bool:
+		return _get_started()
