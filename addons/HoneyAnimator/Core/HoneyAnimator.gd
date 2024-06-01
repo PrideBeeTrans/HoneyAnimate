@@ -609,6 +609,10 @@ class HoneyParameter:
 		_set_on_running(func_ref)
 		return self
 	
+	
+	func get_duration() -> float:
+		return _get_duration()
+	
 
 	func _handle_started() -> void:
 		if not  _is_started() == true:
@@ -1437,8 +1441,11 @@ class HoneySequence:
 	var _auto_start := true setget _set_auto_start,_get_auto_start
 	var _running := false setget _set_running,_get_running
 	
+	var _on_started : FuncRef = null setget _set_on_started,_get_on_started
 	var _on_step_finished : FuncRef = null setget _set_on_step_finished,_get_on_step_finished
 	var _on_all_finished : FuncRef = null setget _set_on_all_finished,_get_on_all_finished
+	
+	var _current_time := 0.0 setget _set_current_time,_get_current_time
 	
 	
 	func _init(node: Node) -> void:
@@ -1455,9 +1462,17 @@ class HoneySequence:
 			if _get_started() == false:
 				_set_started(true)
 				emit_signal("sequence_started")
+				
+				if _get_on_started() != null:
+					_get_on_started().call_func()
+				
 			if _running == false:
 				_set_running(true)
 			_process_sequence(delta)
+	
+	
+	func on_started(value: FuncRef) -> void:
+		_set_on_started(value)
 	
 	
 	func on_step_finished(value: FuncRef) -> void:
@@ -1469,7 +1484,8 @@ class HoneySequence:
 	
 	
 	func append(animation: HoneyParameter) -> HoneySequence:
-		_animations.append(animation)
+		_set_current_time(_get_current_time() + animation.get_duration())
+		_animations.append({"time": _current_time,"animation":animation})
 		animation.in_sequence()
 		animation.connect("animation_finished", self, "_prepare_next")
 		return self
@@ -1477,17 +1493,28 @@ class HoneySequence:
 	
 	func append_callback(target: Object,args: Array = [])  -> HoneySequence:
 		var func_ref_animation := HoneyFuncRefAnimation.new(target, args)
-		_animations.append(func_ref_animation)
+		_set_current_time(_get_current_time() + func_ref_animation._get_duration())
+		_animations.append({"time": _current_time,"animation":func_ref_animation})
+		func_ref_animation.in_sequence()
 		func_ref_animation.connect("animation_finished", self, "_prepare_next")
 		return self
 	
 	
 	func append_interval(duration: float) -> HoneySequence:
 		var interval_animation := HoneyIntervalAnimation.new(duration)
-		_animations.append(interval_animation)
+		_set_current_time(_get_current_time() + duration)
+		_animations.append({"time": _current_time,"animation":interval_animation})
 		interval_animation.in_sequence()
 		interval_animation.connect("animation_finished", self, "_prepare_next")
 		return self
+	
+	
+	#func join(animation: HoneyAnimation) -> HoneySequence:
+	#	if _get_animations().size() > 0:
+	#		var last_time := _animations[_animations.size() - 1]["time"] as float
+	#	animation.in_sequence()
+		#	animation.connect("animation_finished", self, "_prepare_next")
+		#return self
 	
 	
 	func _prepare_next() -> void:
@@ -1500,8 +1527,8 @@ class HoneySequence:
 				return
 			if _current_index < _animations.size() -1:
 				_current_index += 1
-			if _current_index < _animations.size() and _animations[_current_index].has_method("update_from"):
-				_animations[_current_index].update_from()
+			if _current_index < _animations.size() and _animations[_current_index]["animation"].has_method("update_from"):
+				_animations[_current_index]["animation"].update_from()
 	
 	
 	func _process_sequence(delta: float) -> void:
@@ -1511,10 +1538,15 @@ class HoneySequence:
 				_get_animation().process_animation(delta * _get_speed_scale(), true)
 		
 		if _is_all_completed() == true:
-			_set_all_completed(true)
-			emit_signal("sequence_all_finished")
-			if _get_on_all_finished() != null:
-				_get_on_all_finished().call_func()
+			_completed_sequence()
+	
+	
+	func _completed_sequence() -> void:
+		_set_all_completed(true)
+		_current_time = 0.0
+		emit_signal("sequence_all_finished")
+		if _get_on_all_finished() != null:
+			_get_on_all_finished().call_func()
 	
 	
 	func _has_loops() -> bool:
@@ -1522,11 +1554,11 @@ class HoneySequence:
 	
 	
 	func _is_all_completed() -> bool:
-		return _current_index == _animations.size() and not _get_all_completed() == true
+		return _current_index >= _animations.size()
 	
 	
 	func _get_animation() -> Object:
-		return _get_animations()[_current_index]
+		return _get_animations()[_current_index]["animation"]
 	
 	
 	func is_auto_start() -> bool:
@@ -1534,7 +1566,7 @@ class HoneySequence:
 	
 	
 	func is_playing() -> bool:
-		return _current_index != _animations.size()
+		return _current_index < _animations.size()
 	
 	
 	func is_completed() -> bool:
@@ -1547,64 +1579,64 @@ class HoneySequence:
 
 
 	func flip(id) -> void:
-		for animation in _animations:
-			if animation.get_id() == id:
-				animation.flip()
+		for anima_dict in _animations:
+			if anima_dict["animation"].get_id() == id:
+				anima_dict["animation"].flip()
 
 
 	func play_all() -> void:
-		for animation in _animations:
-			animation.play()
+		for anima_dict in _animations:
+			anima_dict["animation"].play()
 
 
 	func play(id) -> void:
-		for animation in _animations:
-			if animation.get_id() == id:
-				animation.play()
+		for anima_dict in _animations:
+			if anima_dict["animation"].get_id() == id:
+				anima_dict["animation"].play()
 
 
 	func play_backwards_all() -> void:
-		for animation in _animations:
-			animation.play_backwards()
+		for anima_dict in _animations:
+			anima_dict["animation"].play_backwards()
 
 
 	func play_backwards(id) -> void:
-		for animation in _animations:
-			if animation.get_id() == id:
-				animation.play_backwards()
+		for anima_dict in _animations:
+			if anima_dict["animation"].get_id() == id:
+				anima_dict["animation"].play_backwards()
 
 
 	func play_forward_all() -> void:
-		for animation in _animations:
-			animation.play_forward()
+		for anima_dict in _animations:
+			anima_dict["animation"].play_forward()
 
 
 	func play_forward(id: int) -> void:
-		for animation in _animations:
-			if animation.get_id() == id:
-				animation.play_forward()
+		for anima_dict in _animations:
+			if anima_dict["animation"].get_id() == id:
+				anima_dict["animation"].play_forward()
 
 
 	func restart_all(include_delay: bool = true, change_delay_to: float = -1.0) -> void:
-		for animation in _animations:
-			animation.restart(include_delay, change_delay_to)
+		for anima_dict in _animations:
+			anima_dict["animation"].restart(include_delay, change_delay_to)
 
 
 	func restart(id: int, include_delay: bool = true, change_delay_to: float = -1.0) -> void:
-		for animation in _animations:
-			if animation.get_id() == id:
-				animation.restart(include_delay, change_delay_to)
+		for anima_dict in _animations:
+			if anima_dict["animation"].get_id() == id:
+				anima_dict["animation"].restart(include_delay, change_delay_to)
 
 
 	func rewind_all(include_delay: bool = true) -> void:
-		for animation in _animations:
-			animation.rewind(include_delay)
+		for anima_dict in _animations:
+			anima_dict["animation"].rewind(include_delay)
 
 
 	func rewind(id: int, include_delay: bool = true) -> void:
-		for animation in _animations:
-			if animation.get_id() == id:
-				animation.rewind(include_delay)
+		for anima_dict in _animations:
+			if anima_dict["animation"].get_id() == id:
+				anima_dict["animation"].rewind(include_delay)
 	
 	
 	func kill() -> void:
@@ -1695,6 +1727,14 @@ class HoneySequence:
 		return _animations
 	
 	
+	func _set_on_started(value: FuncRef) -> void:
+		_on_started = value
+	
+	
+	func _get_on_started() -> FuncRef:
+		return _on_started
+	
+	
 	func _set_on_step_finished(value: FuncRef) -> void:
 		_on_step_finished = value
 	
@@ -1721,3 +1761,11 @@ class HoneySequence:
 	
 	func _is_started() -> bool:
 		return _get_started()
+	
+	
+	func _set_current_time(value: float) -> void:
+		_current_time = value
+		
+
+	func _get_current_time() -> float:
+		return _current_time
