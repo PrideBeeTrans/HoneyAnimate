@@ -1,0 +1,88 @@
+[gd_resource type="Resource" load_steps=16 format=2]
+
+[ext_resource path="res://addons/HoneyAnimator/Core/DataContainer.gd" type="Script" id=1]
+[ext_resource path="res://addons/HoneyAnimator/Easings/EaseQuint.tres" type="Resource" id=2]
+[ext_resource path="res://addons/HoneyAnimator/Easings/EasePulse.tres" type="Resource" id=3]
+[ext_resource path="res://addons/HoneyAnimator/Easings/EaseQuad.tres" type="Resource" id=4]
+[ext_resource path="res://addons/HoneyAnimator/Easings/EaseExpo.tres" type="Resource" id=5]
+[ext_resource path="res://addons/HoneyAnimator/Easings/EaseSine.tres" type="Resource" id=6]
+[ext_resource path="res://addons/HoneyAnimator/Easings/EaseZigZag.tres" type="Resource" id=7]
+[ext_resource path="res://addons/HoneyAnimator/Easings/EaseSlinky.tres" type="Resource" id=8]
+[ext_resource path="res://addons/HoneyAnimator/Easings/EaseBounce.tres" type="Resource" id=9]
+[ext_resource path="res://addons/HoneyAnimator/Easings/EaseBack.tres" type="Resource" id=10]
+[ext_resource path="res://addons/HoneyAnimator/Easings/EaseCubic.tres" type="Resource" id=11]
+[ext_resource path="res://addons/HoneyAnimator/Easings/EaseElastic.tres" type="Resource" id=12]
+[ext_resource path="res://addons/HoneyAnimator/Easings/EaseCirc.tres" type="Resource" id=13]
+[ext_resource path="res://addons/HoneyAnimator/Easings/EaseJelly.tres" type="Resource" id=14]
+[ext_resource path="res://addons/HoneyAnimator/Easings/EaseLinear.tres" type="Resource" id=15]
+
+[resource]
+script = ExtResource( 1 )
+data = {
+"EasingData": {
+"ease_back": ExtResource( 10 ),
+"ease_bounce": ExtResource( 9 ),
+"ease_circ": ExtResource( 13 ),
+"ease_cubic": ExtResource( 11 ),
+"ease_elastic": ExtResource( 12 ),
+"ease_expo": ExtResource( 5 ),
+"ease_jelly": ExtResource( 14 ),
+"ease_linear": ExtResource( 15 ),
+"ease_quad": ExtResource( 3 ),
+"ease_quart": ExtResource( 4 ),
+"ease_quint": ExtResource( 2 ),
+"ease_sine": ExtResource( 6 ),
+"ease_slinky": ExtResource( 8 ),
+"ease_zigzag": ExtResource( 7 )
+},
+"EasingNames": {
+"EaseBackIn": "ease_back_in",
+"EaseBackInOut": "ease_back_in_out",
+"EaseBackOut": "ease_back_out",
+"EaseBackOutIn": "ease_back_out_in",
+"EaseBounceIn": "ease_bounce_in",
+"EaseBounceInOut": "ease_bounce_in_out",
+"EaseBounceOut": "ease_bounce_out",
+"EaseBounceOutIn": "ease_bounce_out_in",
+"EaseCircIn": "ease_circ_in",
+"EaseCircInOut": "ease_circ_in_out",
+"EaseCircOut": "ease_circ_out",
+"EaseCircOutIn": "ease_circ_out_in",
+"EaseCubicIn": "ease_cubic_in",
+"EaseCubicInOut": "ease_cubic_in_out",
+"EaseCubicOut": "ease_cubic_out",
+"EaseCubicOutIn": "ease_cubic_out_in",
+"EaseElasticIn": "ease_elasitic_in",
+"EaseElasticInOut": "ease_elastic_in_out",
+"EaseElasticOut": "ease_elastic_out",
+"EaseElasticOutIn": "ease_elastic_out_in",
+"EaseJellyIn": "ease_jelly_in",
+"EaseJellyInOut": "ease_jelly_in_out",
+"EaseJellyOut": "ease_jelly_out",
+"EaseJellyOutIn": "ease_jelly_out_in",
+"EaseLinearIn": "ease_linear_in",
+"EaseLinearInOut": "ease_linear_in_out",
+"EaseLinearOut": "ease_linear_out",
+"EaseLinearOutIn": "ease_linear_out_in",
+"EaseQuadIn": "ease_quad_in",
+"EaseQuadInOut": "ease_quad_in_out",
+"EaseQuadOut": "ease_quad_out",
+"EaseQuadOutIn": "ease_quad_out_in",
+"EaseQuartIn": "ease_quart_in",
+"EaseQuartInOut": "ease_quart_in_out",
+"EaseQuartOut": "ease_quart_out",
+"EaseQuartOutIn": "ease_quart_out_in",
+"EaseQuintIn": "ease_quint_in",
+"EaseQuintInOut": "ease_quint_in_out",
+"EaseQuintOut": "ease_quint_out",
+"EaseQuintOutIn": "ease_quint_out_in",
+"EaseSineIn": "ease_sine_in",
+"EaseSineInOut": "ease_sine_in_out",
+"EaseSineOut": "ease_sine_out",
+"EaseSineOutIn": "ease_sine_out_in",
+"EaseZigZagIn": "ease_zigzag_in",
+"EaseZigZagInOut": "ease_zigzag_in_out",
+"EaseZigZagOut": "ease_zigzag_out",
+"EaseZigZagOutIn": "ease_zigzag_out_in"
+}
+}
