@@ -7,15 +7,13 @@ HoneyAnimator is an **add-on for Godot 3.x** and will **future avaible for Godot
 ## How To Animate
 ```gdscript
 #Create HoneyAnimator
-# Only parameter animator need is node but will change in future
-var honey_animator := HoneyAnimator.create_honey_animator(self)
+var honey_animator := HoneyAnimator.create_honey_animator()
 ```
-# Generic Functions For Nodes
-## Move
 
-### **NOTE:** This function use global position
+# Generic Functions For Nodes
+>### **NOTE:** This function use global position
 #### move_to(Vector2 or Vector3 target_position, duration float)
-Moves the target's position to the given value
+> Moves the target's position to the given value as Vector2 or Vector3
 ```gdscript
 var honey_animator := HoneyAnimator.create_honey_animator(self)
 honey_animator.target_node($Sprite).move_to(Vector2(200,200), 0.5)
@@ -31,15 +29,16 @@ honey_animator.target_node($Sprite).move_to_x(200, 0.5)
 var honey_animator := HoneyAnimator.create_honey_animator(self)
 honey_animator.target_node($Sprite).move_to_y(200, 0.5)
 ```
-**NOTE:** This Only move_to_z only if is Node3D or Spatial
 ### move_to_z
+>**NOTE:** This Only move_to_z only if is Node3D or Spatial
 ```gdscript
 var honey_animator := HoneyAnimator.create_honey_animator(self)
 honey_animator.target_node($Sprite).move_to_z(200, 0.5)
 ```
-### **NOTE:** This function use position
+
+>### **NOTE:** This function use position
 #### local_move_to(Vector2 or Vector3 target_position, duration float)
-Moves the target's position to the given value
+> Moves the target's position to the given value
 ```gdscript
 var honey_animator := HoneyAnimator.create_honey_animator(self)
 honey_animator.target_node($Sprite).local_move_to(Vector2(200,200), 0.5)
@@ -55,22 +54,23 @@ honey_animator.target_node($Sprite).local_move_to_x(200, 0.5)
 var honey_animator := HoneyAnimator.create_honey_animator(self)
 honey_animator.target_node($Sprite).local_move_to_y(200, 0.5)
 ```
-**NOTE:** This Only move_to_z only works if is Node3D or Spatial
 ### local_move_to_z
+>**NOTE:** This Only move_to_z only works if is Node3D or Spatial
 ```gdscript
 var honey_animator := HoneyAnimator.create_honey_animator(self)
 honey_animator.target_node($Sprite).local_move_to_z(200, 0.5)
 ```
 
-## Scale
 
+## Scale
 #### scale_to(Vector2 or Vector3 target_position, duration float)
-Change the target's scale to the given value
+> Change the target's scale to the given value
 ```gdscript
 var honey_animator := HoneyAnimator.create_honey_animator(self)
 honey_animator.target_node($Sprite).scale_to(Vector2(200,200), 0.5)
 ```
 #### scale_to_x/scale_to_y/scale_to_z(target_position float, duration float)
+> Change the target's scale to the given value
 ### scale_to_x
 ```gdscript
 var honey_animator := HoneyAnimator.create_honey_animator(self)
@@ -82,9 +82,68 @@ var honey_animator := HoneyAnimator.create_honey_animator(self)
 honey_animator.target_node($Sprite).scale_to_y(200, 0.5)
 ```
 
-**NOTE:** This Only scale_to_z only works if is Node3D or Spatial
 ### scale_to_z
+>**NOTE:** This Only scale_to_z only works if is Node3D or Spatial
 ```gdscript
 var honey_animator := HoneyAnimator.create_honey_animator(self)
 honey_animator.target_node($Sprite).scale_to_z(200, 0.5)
+```
+
+
+## Color
+### color_to
+> Change the target's color to the given value
+```gdscript
+var honey_animator := HoneyAnimator.create_honey_animator(self)
+honey_animator.target_node($Sprite).color_to(to_value: Color,duration: float,self_modulate: bool = false)
+```
+
+# Virtual Functions
+
+### target_float(from: float,to: float,duration: float)
+```gdscript
+var honey_animator := HoneyAnimator.create_honey_animator(self)
+honey_animator.target_float(from, to, duration)
+```
+
+### target_vector2(from: Vector2,to: Vector2,duration: float)
+```gdscript
+var honey_animator := HoneyAnimator.create_honey_animator(self)
+honey_animator.target_vector2(from, to, duration)
+```
+
+### target_vector3(from: Vector3,to: Vector3,duration: float)
+```gdscript
+var honey_animator := HoneyAnimator.create_honey_animator(self)
+honey_animator.target_vector3(from, to, duration)
+```
+
+### target_int(from: int,to: int,duration: float)
+```gdscript
+var honey_animator := HoneyAnimator.create_honey_animator(self)
+honey_animator.target_int(from, to, duration)
+```
+
+### target_rect2(from: Rect2,to: Rect2,duration: float)
+```gdscript
+var honey_animator := HoneyAnimator.create_honey_animator(self)
+honey_animator.target_rect2(from, to, duration)
+```
+
+### target_transform3d
+```gdscript
+var honey_animator := HoneyAnimator.create_honey_animator(self)
+honey_animator.target_transform3d(from, to, duration)
+```
+
+### target_aabb
+```gdscript
+var honey_animator := HoneyAnimator.create_honey_animator(self)
+honey_animator.target_aabb(from: AABB,to: AABB,duration: float)
+```
+
+### target_quad(from: Quat,to: Quat,duration: float)
+```gdscript
+var honey_animator := HoneyAnimator.create_honey_animator(self)
+honey_animator.target_quad(from: Quat,to: Quat,duration: float)
 ```
