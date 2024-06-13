@@ -2,16 +2,63 @@
 
 HoneyAnimator is an **add-on for Godot 3.x** and will **future avaible for Godot 4.x** soon,was designed to make more ease to do tweening animation was basead on the famous dotween and take from inspiration Anima.
 
-> **NOTE:** HoneyAnimator is currently in early development!
+> [!WARNING]
+> HoneyAnimator is currently in early development!
 
-## How To Animate
+
+## How To Start
 ```gdscript
 #Create HoneyAnimator
 var honey_animator := HoneyAnimator.create_honey_animator()
 ```
 
+## HoneyAnimator Functions
+
+func reset(id = null)
+
+func reset_all()
+
+
+func resume(id = null)
+
+func resume_all()
+
+func pause(id = null)
+
+func pause_all()
+
+func play(id = null)
+
+func play_all()
+
+func play_backwards_all(id = null)
+
+func play_backwards()
+
+func play_forward_all(id = null)
+
+func play_forward()
+
+func stop(id = null)
+
+func stop_all()
+
+func flip(id = null)
+
+func flip_all()
+
+func restart_all(include_delay: bool = true, change_delay_to: float = -1.0)
+
+func restart(id: int, include_delay: bool = true, change_delay_to: float = -1.0)
+
+func rewind_all(include_delay: bool = true)
+
+func rewind(id: int, include_delay: bool = true)
+
+
 # Generic Functions For Nodes
->### **NOTE:** This function use global position
+> [!NOTE]
+> This function use global position
 #### move_to(Vector2 or Vector3 target_position, duration float)
 > Moves the target's position to the given value as Vector2 or Vector3
 ```gdscript
@@ -147,3 +194,9 @@ honey_animator.target_aabb(from: AABB,to: AABB,duration: float)
 var honey_animator := HoneyAnimator.create_honey_animator(self)
 honey_animator.target_quad(from: Quat,to: Quat,duration: float)
 ```
+
+# Animations CallBacks
+
+## OnStarted
+on_started(funcref: FuncRef)
+Sets a callback that will be fired once when the tween starts (meaning when the tween is set in a playing state the first time, after any eventual delay).
