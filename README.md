@@ -12,6 +12,8 @@ var honey_animator := HoneyAnimator.create_honey_animator(self)
 ```
 # Generic Functions For Nodes
 ## Move
+
+### **NOTE:** This function use global position
 #### move_to(Vector2 or Vector3 target_position, duration float)
 Moves the target's position to the given value
 ```gdscript
@@ -34,4 +36,28 @@ honey_animator.target_node($Sprite).move_to_y(200, 0.5).set_ease(HoneyAnimator.E
 ```gdscript
 var honey_animator := HoneyAnimator.create_honey_animator(self)
 honey_animator.target_node($Sprite).move_to_z(200, 0.5).set_ease(HoneyAnimator.Ease.EaseBackInOut)
+```
+### **NOTE:** This function use position
+#### local_move_to(Vector2 or Vector3 target_position, duration float)
+Moves the target's position to the given value
+```gdscript
+var honey_animator := HoneyAnimator.create_honey_animator(self)
+honey_animator.target_node($Sprite).local_move_to(Vector2(200,200), 0.5).set_ease(HoneyAnimator.Ease.EaseBackInOut)
+```
+#### local_move_to_x/local_move_to_y/local_move_to_z(target_position float, duration float)
+### move_to_x
+```gdscript
+var honey_animator := HoneyAnimator.create_honey_animator(self)
+honey_animator.target_node($Sprite).local_move_to_x(200, 0.5).set_ease(HoneyAnimator.Ease.EaseBackInOut)
+```
+### local_move_to_y
+```gdscript
+var honey_animator := HoneyAnimator.create_honey_animator(self)
+honey_animator.target_node($Sprite).local_move_to_y(200, 0.5).set_ease(HoneyAnimator.Ease.EaseBackInOut)
+```
+**NOTE:** This Only move_to_z only if is Node3D or Spatial
+### local_move_to_z
+```gdscript
+var honey_animator := HoneyAnimator.create_honey_animator(self)
+honey_animator.target_node($Sprite).local_move_to_z(200, 0.5).set_ease(HoneyAnimator.Ease.EaseBackInOut)
 ```
