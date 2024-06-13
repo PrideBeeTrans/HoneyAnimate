@@ -111,4 +111,20 @@ honey_animator.target_node($Sprite).scale_to_y(200, 0.5)
 ```gdscript
 honey_animator.target_node($Sprite).scale_to_z(200, 0.5)
 ```
+
+## Squash To
+#### Squash the target's to the given value as Vector2/Vector3
+
+##### squash_to(squash_intensity: float,reset_scale,duration: float)
+```gdscript
+honey_animator.target_node($Sprite).local_move_to(Vector2(200,200), 0.5)
+```
+
+## Stretch To
+#### Squash the target's to the given value as Vector2/Vector3
+
+##### stretch_to(squash_intensity: float,reset_scale,duration: float)
+```gdscript
+honey_animator.target_node($Sprite).local_move_to(Vector2(200,200), 0.5)
+```
 </details>
