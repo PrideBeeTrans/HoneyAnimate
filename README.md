@@ -1,130 +1,248 @@
-# HoneyAnimator
 
-HoneyAnimator is an **add-on for Godot 3.x** and will **future avaiable for Godot 4.x** soon,was designed to make more ease to do easing animation was basead on the famous dotween and take from inspiration Anima.
 
-> [!WARNING]
+# HoneyAnimator Documentation
+
+HoneyAnimator is an **add-on for Godot 3.x**, with **future support planned for Godot 4.x**. It simplifies easing animations, inspired by DOTween and Anima.
+
+> **Warning**
 > HoneyAnimator is currently in early development!
 
-# How to start
-Creating a HoneyAnimator
+## Table of Contents
+
+1. [Getting Started](#getting-started)
+   - [Creating a HoneyAnimator Instance](#creating-a-honeyanimator-instance)
+2. [Usage](#usage)
+3. [Target Node Functions](#target-node-functions)
+   - [Generic Animation](#generic-animation)
+       - [Animate Property](#animate-property)
+       - [Animate Method](#animate-method)
+   - [Move To](#move-to)
+       - [Move To X](#move-to-x)
+       - [Move To Y](#move-to-y)
+       - [Move To Z](#move-to-z)
+   - [Local Move To](#move-to)
+       - [Local Move To X](#local-move-to-x)
+       - [Local Move To Y](#local-move-to-y)
+       - [Local Move To Z](#local-move-to-z)
+   - [Scale To](#scale-to)
+	   - [Scale To X](#scale-to-x)
+	   - [Scale To Y](#scale-to-y)
+	   - [Scale To Z](#scale-to-z)
+   - [Squash To](#squash-to)
+   - [Stretch To](#squash-to)
+4. [Animation Control Functions](#animation-control-functions)
+    - [Play](#play)
+    - [Play_all](#play-all)
+    - [Play_Backwards_All](#play-backwards-all)
+    - [play_backwards](#play-backwards)
+    - [play_forward_all](#play-forward-all)
+    - [play_forward](#play-forward)
+    - [restart_all](#restart-all)
+    - [restart](#restart)
+    - [rewind_all](#rewind-all)
+    - [rewind](#rewind)
+    - [kill](#kill)
+    - [flip_all](#flip-all)
+    - [flip](#flip)
+    - [set_auto_start](#set-auto-start)
+    - [is_running](#is-running)
+    - [is_paused](#is-paused)
+    - [is_auto_start](#is-auto-start)
+    - [get_animations](#get-animations)
+    - [get_paused_animations](#get-paused-animations)
+    - [get_running_animations](#get-running-animations)
+    - [get_animations_by_id](#get-animations-by-id)
+    - [get_total_animations_by_id](#get-total-animations-by-id)
+    - [get_total_animations_loops](#get-total-animations-loops)
+
+# Getting Started
+
+### Creating a HoneyAnimator
+
+To create a HoneyAnimator instance, extend your node script and instantiate the HoneyAnimator:
+
 ```gdscript
 extends Node
 
+# Create a HoneyAnimator instance
 var honey_animator := HoneyAnimator.create_honey_animator()
+
 ```
 
-# How To Use
+# Usage
+### Here is a basic example of how to use HoneyAnimator to animate a Sprite node:
+
 ```gdscript
 extends Node
 
+# Create a HoneyAnimator instance
 var honey_animator := HoneyAnimator.create_honey_animator()
+
+# Set the target node to animate
 honey_animator.target_node($Sprite)
 ```
 
-<details>
-<summary>Target Node Functions</summary>
+## Animation Functions
 
-## Generic Way
-##### anima_property(property: NodePath,to_value,duration: float)
+
+## Target Node Functions
+### Generic Animation
+
+#### Animate Property
+`anima_property(property, to_value, duration)`Animates a specified property of the target node to a given value over the specified duration.
+
+#### Parameters:
+
+- property (NodePath): The property of the target node to animate.
+- to_value (Variant): The final value to animate the property to.
+- duration (float): The duration over which the animation occurs.
+
+Example Usage:
+
 ```gdscript
+#Animate the position property of the target node to Vector2.ONE over 0.5 seconds
 honey_animator.target_node($Sprite).anima_property("position", Vector2.ONE, 0.5)
 ```
 
+
+#### Animate Method
+`anima_method(method, from, to, duration)` Animates a method call on the target node from a specified starting value to an end value over the given duration.
+
+#### Parameters:
+
+- method (FuncRef): The method reference to animate.
+- from (Variant): The initial value to start the animation from.
+- to_value (Variant): The final value to animate to.
+- Animates a method call on the target node from a specified starting value to an end value over the given duration.
+- duration (float): The duration over which the animation occurs.
+
+Example Usage:
+
+```gdscript
+#Animate the position property of the target node to Vector2.ONE over 0.5 seconds
+honey_animator.target_node($Sprite).anima_method(funcref, from, to_value, duration)
+```
+
 ## Move To
-### This function use global position!
-#### Moves the target's position to the given value as Vector2 or Vector3
+`move_to(target_position, duration)`Moves the target's global position to the specified value.
 
-##### move_to(target_position: Vector2/Vector3,duration: float)
+#### Parameters:
+
+- target_position (Vector2/Vector3): The position to move the target to.
+- duration (float): The duration over which the animation occurs.
+
+Example Usage:
+
 ```gdscript
-honey_animator.target_node($Sprite).move_to(Vector2(200,200), 0.5)
+# Move the target node to the global position (200, 200) over 0.5 seconds
+honey_animator.target_node($Sprite).move_to(Vector2(200, 200), 0.5)
 ```
 
-#### Moves the target's position to the given value as float
-#### move_to_x/move_to_y/move_to_z(target_position: float,duration: float)
+## Move To X
 
-##### move_to_x(target_position: float,duration: float)
+`move_to_x(target_position, duration)`Moves the target's global X position.
+
+Parameters:
+
+- target_position (float): The X position to move the target to.
+- duration (float): The duration over which the animation occurs.
+
+Example Usage:
+
 ```gdscript
-honey_animator.target_node($Sprite).move_to_x(Vector2(200,200), 0.5)
+# Move the target node's global X position to 200 over 0.5 seconds
+honey_animator.target_node($Sprite).move_to_x(200, 0.5)
 ```
 
-##### move_to_y(target_position: float,duration: float)
+## Move To Y
+
+`move_to_y(target_position, duration)`Moves the target's global Y position.
+
+Parameters:
+
+- target_position (float): The Y position to move the target to.
+- duration (float): The duration over which the animation occurs.
+
+Example Usage:
+
 ```gdscript
-honey_animator.target_node($Sprite).move_to_y(Vector2(200,200), 0.5)
+# Move the target node's global Y position to 200 over 0.5 seconds
+honey_animator.target_node($Sprite).move_to_y(200, 0.5)
 ```
 
-##### move_to_z(target_position: float,duration: float)
+## Move To Z
+
+`move_to_z(target_position, duration)`Moves the target's global Z position (for 3D nodes).
+
+Parameters:
+
+- target_position (float): The Z position to move the target to.
+- duration (float): The duration over which the animation occurs.
+
+Example Usage:
+
 ```gdscript
-honey_animator.target_node($Sprite).move_to_z(Vector2(200,200), 0.5)
+# Move the target node's global Z position to 200 over 0.5 seconds
+honey_animator.target_node($Sprite3D).move_to_z(200, 0.5)
 ```
 
-## Local Move To
-### This function use position!
-#### Moves the target's position to the given value as Vector2/Vector3
-
-##### local_move_to(target_position: Vector2/Vector3,duration: float)
-```gdscript
-honey_animator.target_node($Sprite).local_move_to(Vector2(200,200), 0.5)
-```
-
-#### Moves the target's position to the given value as float by axis choosed
-#### move_to_x/move_to_y/move_to_z(target_position: float,duration: float)
-
-##### local_move_to_x(target_position: float,duration: float)
-```gdscript
-honey_animator.target_node($Sprite).local_move_to_x(200, 0.5)
-```
-
-##### local_move_to_y(target_position: float,duration: float)
-```gdscript
-honey_animator.target_node($Sprite).local_move_to_y(200, 0.5)
-```
-
-#### This only work if is Node3D or Spatial
-##### local_move_to_z(target_position: float,duration: float)
-```gdscript
-honey_animator.target_node($Sprite).local_move_to_z(200, 0.5)
-```
 
 ## Scale To
-#### Scale the target's to the given value as Vector2/Vector3
+`scale_to(target_scale, duration)` Animates the target scale to the specified value.
 
-##### scale_to(target_scale: Vector2 or Vector3,duration: float)
+Parameters:
+
+- target_scale (Vector2/Vector3): The scale to animate the target to.
+- duration (float): The duration over which the animation occurs.
+
+Example Usage:
+
+
 ```gdscript
-honey_animator.target_node($Sprite).local_move_to(Vector2(200,200), 0.5)
+# Scale the target node to (2, 2) over 0.5 seconds
+honey_animator.target_node($Sprite).scale_to(Vector2(2, 2), 0.5)
 ```
 
-#### Scale the target's to the given value as float by axis choosed
-#### scale_to_x/scale_to_y/scale_to_z(target_scale: float,duration: float)
+## Scale To X
+`scale_to_x(target_scale, duration)`Animates the target's X scale to the specified value.
 
-##### scale_move_to_x(target_scale: float,duration: float)
+Parameters:
+
+- target_scale (float): The X scale to animate the target to.
+- duration (float): The duration over which the animation occurs.
+
+Example Usage:
 ```gdscript
+# Scale the target node's X axis to 200 over 0.5 seconds
 honey_animator.target_node($Sprite).scale_to_x(200, 0.5)
 ```
 
-##### scale_move_to_y(target_scale: float,duration: float)
+
+## Scale To Y
+`scale_to_y(target_scale, duration)`Animates the target's Y scale to the specified values.
+
+Parameters:
+
+- target_scale (float): The Y scale to animate the target to.
+- duration (float): The duration over which the animation occurs.
+
+Example Usage:
 ```gdscript
+# Scale the target node's Y axis to 200 over 0.5 seconds
 honey_animator.target_node($Sprite).scale_to_y(200, 0.5)
 ```
 
-#### This only work if is Node3D or Spatial
-##### scale_move_to_z(target_position: float,duration: float)
+## Scale To Z
+`scale_to_z(target_scale, duration)`Animates the target's Z scale to the specified value (for 3D nodes).
+
+Parameters:
+
+- target_scale (float): The Z scale to animate the target to.
+- duration (float): The duration over which the animation occurs.
+
+
+Example Usage:
 ```gdscript
-honey_animator.target_node($Sprite).scale_to_z(200, 0.5)
+# Scale the target node's z axis to 200 over 0.5 seconds
+honey_animator.target_node($Sprite3D).scale_to_z(200, 0.5)
 ```
-
-## Squash To
-#### Squash the target's to the given value as Vector2/Vector3
-
-##### squash_to(squash_intensity: float,reset_scale,duration: float)
-```gdscript
-honey_animator.target_node($Sprite).local_move_to(Vector2(200,200), 0.5)
-```
-
-## Stretch To
-#### Squash the target's to the given value as Vector2/Vector3
-
-##### stretch_to(squash_intensity: float,reset_scale,duration: float)
-```gdscript
-honey_animator.target_node($Sprite).local_move_to(Vector2(200,200), 0.5)
-```
-</details>
