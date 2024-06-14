@@ -114,7 +114,7 @@ Parameters:
 Example Usage:
 
 ```gdscript
-honey_animator.play_backwards()
+honey_animator.play_backwards(Vector2(1,1))
 ```
 
 ## Target Node Functions
