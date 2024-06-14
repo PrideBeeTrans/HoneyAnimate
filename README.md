@@ -32,15 +32,15 @@ HoneyAnimator is an **add-on for Godot 3.x**, with **future support planned for 
    - [Stretch To](#squash-to)
 4. [Animation Functions](#animation-functions)
     - [Play](#play)
-    - [Play_all](#play-all)
-    - [Play_Backwards_All](#play-backwards-all)
+    - [Play_All](#play-all)
     - [play_backwards](#play-backwards)
-    - [play_forward_all](#play-forward-all)
+    - [Play_Backwards_All](#play-backwards-all)
     - [play_forward](#play-forward)
-    - [restart_all](#restart-all)
+    - [play_forward_all](#play-forward-all)
     - [restart](#restart)
-    - [rewind_all](#rewind-all)
+    - [restart_all](#restart-all)
     - [rewind](#rewind)
+    - [rewind_all](#rewind-all)
     - [kill](#kill)
     - [flip_all](#flip-all)
     - [flip](#flip)
@@ -93,10 +93,26 @@ Parameters:
 Example Usage:
 
 ```gdscript
-#Animate the position property of the target node to Vector2.ONE over 0.5 seconds
-honey_animator.target_node($Sprite).anima_property("position", Vector2.ONE, 0.5)
+honey_animator.play("Group")
 ```
 
+#### Play All
+`play_all()`Plays all animations.
+
+Example Usage:
+
+```gdscript
+honey_animator.play_all()
+```
+
+#### Play 
+`play_all()`Plays all animations.
+
+Example Usage:
+
+```gdscript
+honey_animator.play_all()
+```
 
 ## Target Node Functions
 ### Generic Animation
