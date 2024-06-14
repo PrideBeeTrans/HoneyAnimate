@@ -30,7 +30,7 @@ HoneyAnimator is an **add-on for Godot 3.x**, with **future support planned for 
 	   - [Scale To Z](#scale-to-z)
    - [Squash To](#squash-to)
    - [Stretch To](#squash-to)
-4. [Animation Control Functions](#animation-control-functions)
+4. [Animation Functions](#animation-functions)
     - [Play](#play)
     - [Play_all](#play-all)
     - [Play_Backwards_All](#play-backwards-all)
