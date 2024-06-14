@@ -4,7 +4,7 @@
 
 HoneyAnimator is an **add-on for Godot 3.x**, with **future support planned for Godot 4.x**. It simplifies easing animations, inspired by DOTween and Anima.
 
-> **Warning**
+> [!WARNING]
 > HoneyAnimator is currently in early development!
 
 ## Table of Contents
