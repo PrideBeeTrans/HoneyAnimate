@@ -116,7 +116,7 @@ honey_animator.play_backwards(Vector2(1,1))
 ```
 
 #### Play All Backwards
-`play_all_backwards()`Plays all animations.
+`play_all_backwards()`Plays all animations backwards.
 
 Example Usage:
 
@@ -143,6 +143,60 @@ Example Usage:
 
 ```gdscript
 honey_animator.play_all_forward()
+```
+
+#### Restart
+`restart(id: Variant)`Restarts the animation with the specified ID.
+
+Parameters:
+- id (int): The ID of the animation to restart.
+- include_delay (bool, default = true): Whether to include the delay.
+- change_delay_to (float, default = -1.0): The new delay to set.
+
+Example Usage:
+
+```gdscript
+honey_animator.restart(Vector2(1,1))
+```
+
+#### Restart All
+`restart_all()`Restarts all animations.
+
+Parameters:
+
+- include_delay (bool, default = true): Whether to include the delay.
+- change_delay_to (float, default = -1.0): The new delay to set.
+
+Example Usage:
+
+```gdscript
+honey_animator.restart_all()
+```
+
+#### Rewind
+`rewind(id: Variant)`Rewinds the animation with the specified ID.
+
+Parameters:
+- id (int): The ID of the animation to rewind.
+- include_delay (bool, default=true): Whether to include the delay.
+
+Example Usage:
+
+```gdscript
+honey_animator.rewind(Vector2(1,1))
+```
+
+#### Rewind All
+`rewind_all()`Rewinds all animations.
+
+Parameters:
+
+- include_delay (bool, default=true): Whether to include the delay.
+
+Example Usage:
+
+```gdscript
+honey_animator.rewind_all()
 ```
 
 ## Target Node Functions
