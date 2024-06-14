@@ -84,6 +84,19 @@ honey_animator.target_node($Sprite)
 
 ## Animation Functions
 
+#### Play
+`play(id: Variant)`Plays the animation with the specified ID.
+
+Parameters:
+- id (Variant): The ID of the animation to play.
+
+Example Usage:
+
+```gdscript
+#Animate the position property of the target node to Vector2.ONE over 0.5 seconds
+honey_animator.target_node($Sprite).anima_property("position", Vector2.ONE, 0.5)
+```
+
 
 ## Target Node Functions
 ### Generic Animation
