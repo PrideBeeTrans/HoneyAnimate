@@ -54,7 +54,7 @@ HoneyAnimator is an **add-on for Godot 3.x**, with **future support planned for 
     - [Rotation To](#rotation-to)
     - [Rotation Degrees To](#rotation-degrees-to)
     - [Squash To](#squash-to)
-    - [Stretch To](#squash-to)
+    - [Stretch To](#stretch-to)
 
 # Getting Started
 
