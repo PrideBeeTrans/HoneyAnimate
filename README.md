@@ -10,7 +10,7 @@ HoneyAnimator is an **add-on for Godot 3.x**, with **future support planned for 
 ## Table of Contents
 
 1. [Getting Started](#getting-started)
-   - [Creating a HoneyAnimator Instance](#creating-a-honeyanimator)
+   - [Creating a HoneyAnimator](#creating-a-honeyanimator)
 2. [Usage](#usage)
 3. [Target Node Functions](#target-node-functions)
    - [Generic Animation](#generic-animation)
