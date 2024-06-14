@@ -8,27 +8,9 @@ HoneyAnimator is an **add-on for Godot 3.x**, with **future support planned for 
 ## Table of Contents
 
 1. [Getting Started](#getting-started)
-   - [Creating a HoneyAnimator](#creating-a-honeyanimator)
-2. [Usage](#usage)
-3. [Target Node Functions](#target-node-functions)
-   - [Generic Animation](#generic-animation)
-       - [Animate Property](#animate-property)
-       - [Animate Method](#animate-method)
-   - [Move To](#move-to)
-       - [Move To X](#move-to-x)
-       - [Move To Y](#move-to-y)
-       - [Move To Z](#move-to-z)
-   - [Local Move To](#move-to)
-       - [Local Move To X](#local-move-to-x)
-       - [Local Move To Y](#local-move-to-y)
-       - [Local Move To Z](#local-move-to-z)
-   - [Scale To](#scale-to)
-	   - [Scale To X](#scale-to-x)
-	   - [Scale To Y](#scale-to-y)
-	   - [Scale To Z](#scale-to-z)
-   - [Squash To](#squash-to)
-   - [Stretch To](#squash-to)
-4. [Animation Functions](#animation-functions)
+2. [How Install](#how-install)
+3. [Usage](#usage)
+4. [Animator Functions](#animator-functions)
     - [Play](#play)
     - [Play_All](#play-all)
     - [Play_Backwards](#play-backwards)
@@ -52,6 +34,27 @@ HoneyAnimator is an **add-on for Godot 3.x**, with **future support planned for 
     - [Get_Animations_By_Id](#get-animations-by-id)
     - [Get_Total_Animations_By_Id](#get-total-animations-by-id)
     - [Get_Total_Animations_Loops](#get-total-animations-loops)
+5. [Target Node Functions](#target-node-functions)
+   - [Generic Animation](#generic-animation)
+       - [Animate Property](#animate-property)
+       - [Animate Method](#animate-method)
+   - [Move To](#move-to)
+       - [Move To X](#move-to-x)
+       - [Move To Y](#move-to-y)
+       - [Move To Z](#move-to-z)
+   - [Local Move To](#move-to)
+       - [Local Move To X](#local-move-to-x)
+       - [Local Move To Y](#local-move-to-y)
+       - [Local Move To Z](#local-move-to-z)
+   - [Scale To](#scale-to)
+	   - [Scale To X](#scale-to-x)
+	   - [Scale To Y](#scale-to-y)
+	   - [Scale To Z](#scale-to-z)
+    - [Color To](#color-to)
+    - [Rotation To](#rotation-to)
+    - [Rotation Degrees To](#rotation-degrees-to)
+    - [Squash To](#squash-to)
+    - [Stretch To](#squash-to)
 
 # Getting Started
 
@@ -80,13 +83,13 @@ var honey_animator := HoneyAnimator.create_honey_animator()
 honey_animator.target_node($Sprite)
 ```
 
-## Animation Functions
+## Animator Functions
 
 #### Play
 `play(id: Variant)`Plays the animation with the specified ID.
 
 Parameters:
-- id (Variant): The ID of the animation to play.
+- `id` (Variant): The ID of the animation to play.
 
 Example Usage:
 
@@ -107,7 +110,7 @@ honey_animator.play_all()
 `play_backwards(id: Variant)`Plays the animation with the specified ID backwards.
 
 Parameters:
-- id (Variant): The ID of the animation to play backward.
+- `id` (Variant): The ID of the animation to play backward.
 
 Example Usage:
 
@@ -128,7 +131,7 @@ honey_animator.play_all_backwards()
 `play_forward(id: Variant)`Plays the animation with the specified ID forward.
 
 Parameters:
-- id (Variant): The ID of the animation to play forward.
+- `id` (Variant): The ID of the animation to play forward.
 
 Example Usage:
 
@@ -149,9 +152,9 @@ honey_animator.play_all_forward()
 `restart(id: Variant)`Restarts the animation with the specified ID.
 
 Parameters:
-- id (int): The ID of the animation to restart.
-- include_delay (bool, default = true): Whether to include the delay.
-- change_delay_to (float, default = -1.0): The new delay to set.
+- `id` (int): The ID of the animation to restart.
+- `include_delay` (bool, default = true): Whether to include the delay.
+- `change_delay_to` (float, default = -1.0): The new delay to set.
 
 Example Usage:
 
@@ -164,8 +167,8 @@ honey_animator.restart(Vector2(1,1))
 
 Parameters:
 
-- include_delay (bool, default = true): Whether to include the delay.
-- change_delay_to (float, default = -1.0): The new delay to set.
+- `include_delay` (bool, default = true): Whether to include the delay.
+- `change_delay_to` (float, default = -1.0): The new delay to set.
 
 Example Usage:
 
@@ -177,8 +180,8 @@ honey_animator.restart_all()
 `rewind(id: Variant)`Rewinds the animation with the specified ID.
 
 Parameters:
-- id (int): The ID of the animation to rewind.
-- include_delay (bool, default=true): Whether to include the delay.
+- `id` (int): The ID of the animation to rewind.
+- `include_delay` (bool, default=true): Whether to include the delay.
 
 Example Usage:
 
@@ -191,7 +194,7 @@ honey_animator.rewind(Vector2(1,1))
 
 Parameters:
 
-- include_delay (bool, default=true): Whether to include the delay.
+- `include_delay` (bool, default=true): Whether to include the delay.
 
 Example Usage:
 
@@ -207,9 +210,9 @@ honey_animator.rewind_all()
 
 #### Parameters:
 
-- property (NodePath): The property of the target node to animate.
-- to_value (Variant): The final value to animate the property to.
-- duration (float): The duration over which the animation occurs.
+- `property` (NodePath): The property of the target node to animate.
+- `to_value` (Variant): The final value to animate the property to.
+- `duration` (float): The duration over which the animation occurs.
 
 Example Usage:
 
@@ -224,11 +227,10 @@ honey_animator.target_node($Sprite).anima_property("position", Vector2.ONE, 0.5)
 
 #### Parameters:
 
-- method (FuncRef): The method reference to animate.
-- from (Variant): The initial value to start the animation from.
-- to_value (Variant): The final value to animate to.
-- Animates a method call on the target node from a specified starting value to an end value over the given duration.
-- duration (float): The duration over which the animation occurs.
+- `method` (FuncRef): The method reference to animate.
+- `from` (Variant): The initial value to start the animation from.
+- `to_value` (Variant): The final value to animate to.
+- `duration` (float): The duration over which the animation occurs.
 
 Example Usage:
 
@@ -242,8 +244,8 @@ honey_animator.target_node($Sprite).anima_method(funcref, from, to_value, durati
 
 #### Parameters:
 
-- target_position (Vector2/Vector3): The position to move the target to.
-- duration (float): The duration over which the animation occurs.
+- `target_position` (Vector2/Vector3): The position to move the target to.
+- `duration` (float): The duration over which the animation occurs.
 
 Example Usage:
 
@@ -258,8 +260,8 @@ honey_animator.target_node($Sprite).move_to(Vector2(200, 200), 0.5)
 
 Parameters:
 
-- target_position (float): The X position to move the target to.
-- duration (float): The duration over which the animation occurs.
+- `target_position` (float): The X position to move the target to.
+- `duration` (float): The duration over which the animation occurs.
 
 Example Usage:
 
@@ -274,8 +276,8 @@ honey_animator.target_node($Sprite).move_to_x(200, 0.5)
 
 Parameters:
 
-- target_position (float): The Y position to move the target to.
-- duration (float): The duration over which the animation occurs.
+- `target_position` (float): The Y position to move the target to.
+- `duration` (float): The duration over which the animation occurs.
 
 Example Usage:
 
@@ -290,8 +292,8 @@ honey_animator.target_node($Sprite).move_to_y(200, 0.5)
 
 Parameters:
 
-- target_position (float): The Z position to move the target to.
-- duration (float): The duration over which the animation occurs.
+- `target_position` (float): The Z position to move the target to.
+- `duration` (float): The duration over which the animation occurs.
 
 Example Usage:
 
@@ -300,14 +302,77 @@ Example Usage:
 honey_animator.target_node($Sprite3D).move_to_z(200, 0.5)
 ```
 
+##  Local Move To
+`local_move_to(target_position, duration)`Moves the target's local position to the specified value.
+
+#### Parameters:
+
+- `target_position` (Vector2/Vector3): The position to move the target to.
+- `duration`` (float): The duration over which the animation occurs.
+
+Example Usage:
+
+```gdscript
+# Move the target node to the local position (200, 200) over 0.5 seconds
+honey_animator.target_node($Sprite).local_move_to(Vector2(200, 200), 0.5)
+```
+
+## Local Move To X
+
+`local_move_to_x(target_position, duration)`Moves the target's local X position.
+
+Parameters:
+
+- `target_position` (float): The X position to move the target to.
+- `duration` (float): The duration over which the animation occurs.
+
+Example Usage:
+
+```gdscript
+# Move the target node's local X position to 200 over 0.5 seconds
+honey_animator.target_node($Sprite).local_move_to_x(200, 0.5)
+```
+
+## Local Move To Y
+
+`local_move_to_y(target_position, duration)`Moves the target's local Y position.
+
+Parameters:
+
+- `target_position` (float): The Y position to move the target to.
+- `duration` (float): The duration over which the animation occurs.
+
+Example Usage:
+
+```gdscript
+# Move the target node's local Y position to 200 over 0.5 seconds
+honey_animator.target_node($Sprite).move_to_y(200, 0.5)
+```
+
+## Local Move To Z
+
+`local_move_to_z(target_position, duration)`Moves the target's local Z position (for 3D nodes).
+
+Parameters:
+
+- `target_position` (float): The Z position to move the target to.
+- `duration` (float): The duration over which the animation occurs.
+
+Example Usage:
+
+```gdscript
+# Move the target node's global Z position to 200 over 0.5 seconds
+honey_animator.target_node($Sprite3D).local_move_to_z(200, 0.5)
+```
+
 
 ## Scale To
 `scale_to(target_scale, duration)` Animates the target scale to the specified value.
 
 Parameters:
 
-- target_scale (Vector2/Vector3): The scale to animate the target to.
-- duration (float): The duration over which the animation occurs.
+- `target_scale` (Vector2/Vector3): The scale to animate the target to.
+- `duration` (float): The duration over which the animation occurs.
 
 Example Usage:
 
@@ -322,8 +387,8 @@ honey_animator.target_node($Sprite).scale_to(Vector2(2, 2), 0.5)
 
 Parameters:
 
-- target_scale (float): The X scale to animate the target to.
-- duration (float): The duration over which the animation occurs.
+- `target_scale` (float): The X scale to animate the target to.
+- `duration` (float): The duration over which the animation occurs.
 
 Example Usage:
 ```gdscript
@@ -337,8 +402,8 @@ honey_animator.target_node($Sprite).scale_to_x(200, 0.5)
 
 Parameters:
 
-- target_scale (float): The Y scale to animate the target to.
-- duration (float): The duration over which the animation occurs.
+- `target_scale` (float): The Y scale to animate the target to.
+- `duration (float)`: The duration over which the animation occurs.
 
 Example Usage:
 ```gdscript
@@ -351,12 +416,96 @@ honey_animator.target_node($Sprite).scale_to_y(200, 0.5)
 
 Parameters:
 
-- target_scale (float): The Z scale to animate the target to.
-- duration (float): The duration over which the animation occurs.
+- `target_scale` (float): The Z scale to animate the target to.
+- `duration` (float): The duration over which the animation occurs.
 
 
 Example Usage:
 ```gdscript
 # Scale the target node's z axis to 200 over 0.5 seconds
 honey_animator.target_node($Sprite3D).scale_to_z(200, 0.5)
+```
+
+## Color To
+`color_to(target_color, duration)`Animates the target node's color to the specified value over the given duration. Optionally, it can animate the `self_modulate` property instead of the `modulate` property.
+
+Parameters:
+
+- `to_value` (Color): The target color to animate to.
+- `duration` (float): The duration over which the animation occurs.
+- `self_modulate` (bool, default: false): If `true`, the animation affects the `self_modulate` property instead of the `modulate` property.
+
+
+Example Usage:
+
+```gdscript
+honey_animator.target_node($Sprite).color_to(Color(1, 0, 0), 0.5)
+```
+Animates the target node's color to red over 0.5 seconds. To animate the `self_modulate` property instead, set the `self_modulate` parameter to true:
+```gdscript
+honey_animator.target_node($Sprite).color_to(Color(1, 0, 0), 0.5, true)
+```
+
+## Rotation To
+`rotation_to(to_value, duration)`Animates the target node's `rotation` (in radians) to the specified value over the given duration.
+
+
+Parameters:
+
+- `to_value` (float): The target rotation in radians.
+- `duration` (float): The duration over which the animation occurs.
+
+
+Example Usage:
+
+```gdscript
+honey_animator.target_node($Sprite).rotation_to(PI, 0.5)
+```
+
+## Rotation Degrees To
+`rotation_degrees_to(to_value, duration)`Animates the target node's rotation (in degrees) to the specified value over the given duration.
+
+
+Parameters:
+
+- `to_value` (float): The target rotation in degrees.
+- `duration` (float): The duration over which the animation occurs.
+
+
+Example Usage:
+
+```gdscript
+honey_animator.target_node($Sprite).rotation_degrees_to(180, 0.5)
+```
+
+
+## Squash To
+`squash_to(squash_intesity, reset_scale, duration)`Animates the target node's squash to the specified intensity over the given duration.
+
+Parameters:
+
+- `squash_intensity` (float): The intensity of the squash effect.
+- `reset_scale` (Vector2/Vector3): The scale to reset to after squashing.
+- `duration` (float): The duration over which the animation occurs.
+
+Example Usage:
+
+```gdscript
+honey_animator.target_node($Sprite).squash_to(0.5, Vector2(1, 1), 0.5)
+```
+
+
+## Stetch To
+`stretch_to(stretch_intesity, reset_scale, duration)`Animates the target node's stretch to the specified intensity over the given duration.
+
+Parameters:
+
+- `stretch_intesity` (float): The intensity of the stretch effect.
+- `reset_scale` (Vector2/Vector3): The scale to reset to after stretching.
+- `duration` (float): The duration over which the animation occurs.
+
+Example Usage:
+
+```gdscript
+honey_animator.target_node($Sprite).stretch_to(0.5, Vector2(1, 1), 0.5)
 ```
