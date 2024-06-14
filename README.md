@@ -105,13 +105,16 @@ Example Usage:
 honey_animator.play_all()
 ```
 
-#### Play 
-`play_all()`Plays all animations.
+#### Play Backwards
+`play_backwards(id: Variant)`Plays the animation with the specified ID backwards.
+
+Parameters:
+- id (Variant): The ID of the animation to play.
 
 Example Usage:
 
 ```gdscript
-honey_animator.play_all()
+honey_animator.play_backwards()
 ```
 
 ## Target Node Functions
