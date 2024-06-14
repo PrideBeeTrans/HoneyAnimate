@@ -1,5 +1,3 @@
-
-
 # HoneyAnimator Documentation
 
 HoneyAnimator is an **add-on for Godot 3.x**, with **future support planned for Godot 4.x**. It simplifies easing animations, inspired by DOTween and Anima.
@@ -33,27 +31,27 @@ HoneyAnimator is an **add-on for Godot 3.x**, with **future support planned for 
 4. [Animation Functions](#animation-functions)
     - [Play](#play)
     - [Play_All](#play-all)
-    - [play_backwards](#play-backwards)
-    - [Play_Backwards_All](#play-backwards-all)
-    - [play_forward](#play-forward)
-    - [play_forward_all](#play-forward-all)
-    - [restart](#restart)
-    - [restart_all](#restart-all)
-    - [rewind](#rewind)
-    - [rewind_all](#rewind-all)
-    - [kill](#kill)
-    - [flip_all](#flip-all)
-    - [flip](#flip)
-    - [set_auto_start](#set-auto-start)
-    - [is_running](#is-running)
-    - [is_paused](#is-paused)
-    - [is_auto_start](#is-auto-start)
-    - [get_animations](#get-animations)
-    - [get_paused_animations](#get-paused-animations)
-    - [get_running_animations](#get-running-animations)
-    - [get_animations_by_id](#get-animations-by-id)
-    - [get_total_animations_by_id](#get-total-animations-by-id)
-    - [get_total_animations_loops](#get-total-animations-loops)
+    - [Play_Backwards](#play-backwards)
+    - [Play_All Backwards](#play-all-backwards)
+    - [Play_Forward](#play-forward)
+    - [Play_Forward_All](#play-all-forward)
+    - [Restart](#restart)
+    - [Restart_All](#restart-all)
+    - [Rewind](#rewind)
+    - [Rewind_All](#rewind-all)
+    - [Kill](#kill)
+    - [Flip_All](#flip-all)
+    - [Flip](#flip)
+    - [Set_Auto_Start](#set-auto-start)
+    - [Is_Running](#is-running)
+    - [Is_Paused](#is-paused)
+    - [Is_Auto_Start](#is-auto-start)
+    - [Get_Animations](#get-animations)
+    - [Get_Paused_Animations](#get-paused-animations)
+    - [Get_Running_Animations](#get-running-animations)
+    - [Get_Animations_By_Id](#get-animations-by-id)
+    - [Get_Total_Animations_By_Id](#get-total-animations-by-id)
+    - [Get_Total_Animations_Loops](#get-total-animations-loops)
 
 # Getting Started
 
@@ -109,12 +107,42 @@ honey_animator.play_all()
 `play_backwards(id: Variant)`Plays the animation with the specified ID backwards.
 
 Parameters:
-- id (Variant): The ID of the animation to play.
+- id (Variant): The ID of the animation to play backward.
 
 Example Usage:
 
 ```gdscript
 honey_animator.play_backwards(Vector2(1,1))
+```
+
+#### Play All Backwards
+`play_all_backwards()`Plays all animations.
+
+Example Usage:
+
+```gdscript
+honey_animator.play_all_backwards()
+```
+
+#### Play Forward
+`play_forward(id: Variant)`Plays the animation with the specified ID forward.
+
+Parameters:
+- id (Variant): The ID of the animation to play forward.
+
+Example Usage:
+
+```gdscript
+honey_animator.play_forward(Vector2(1,1))
+```
+
+#### Play All Forward
+`play_all_forward()`Plays all animations.
+
+Example Usage:
+
+```gdscript
+honey_animator.play_all_forward()
 ```
 
 ## Target Node Functions
